@@ -10,6 +10,7 @@ import DashboardPage from './pages/DashboardPage';
 import SubmitPage from './pages/SubmitPage';
 import ResultPage from './pages/ResultPage';
 import HistoryPage from './pages/HistoryPage';
+import ResourcesPage from './pages/ResourcesPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 const App = () => {
@@ -27,6 +28,7 @@ const App = () => {
           <Route path="/submit" element={<SubmitPage />} />
           <Route path="/result/:id" element={<ResultPage />} />
           <Route path="/history" element={<HistoryPage />} />
+          <Route path="/resources" element={<ResourcesPage />} />
         </Route>
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
         <Route path="*" element={<NotFoundPage />} />

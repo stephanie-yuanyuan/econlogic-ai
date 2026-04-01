@@ -24,6 +24,14 @@ const Navbar = () => {
         </Link>
 
         <div className="flex items-center gap-4">
+          {session && (
+            <div className="hidden md:flex gap-1">
+              <Link to="/dashboard" className="text-sm font-medium text-slate-500 hover:text-blue-600 px-3 py-1.5 rounded-lg hover:bg-blue-50 transition-colors">首页</Link>
+              <Link to="/submit" className="text-sm font-medium text-slate-500 hover:text-blue-600 px-3 py-1.5 rounded-lg hover:bg-blue-50 transition-colors">提交论文</Link>
+              <Link to="/resources" className="text-sm font-medium text-slate-500 hover:text-blue-600 px-3 py-1.5 rounded-lg hover:bg-blue-50 transition-colors">资料库</Link>
+              <Link to="/history" className="text-sm font-medium text-slate-500 hover:text-blue-600 px-3 py-1.5 rounded-lg hover:bg-blue-50 transition-colors">历史记录</Link>
+            </div>
+          )}
           {session ? (
             <>
               <div className="hidden md:flex items-center gap-2 text-sm text-slate-500">
