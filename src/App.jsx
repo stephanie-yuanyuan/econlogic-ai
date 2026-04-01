@@ -23,12 +23,12 @@ const App = () => {
       <Navbar />
       <Routes>
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/resources" element={<ResourcesPage />} />
         <Route element={<AuthGuard />}>
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/submit" element={<SubmitPage />} />
           <Route path="/result/:id" element={<ResultPage />} />
           <Route path="/history" element={<HistoryPage />} />
-          <Route path="/resources" element={<ResourcesPage />} />
         </Route>
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
         <Route path="*" element={<NotFoundPage />} />
