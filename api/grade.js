@@ -18,15 +18,29 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'submissionId is required' });
   }
 
-  // 1. 获取 submission + unit + rubric
+  // 1. 获取 submission
   const { data: submission, error: subError } = await supabase
     .from('submissions')
-    .select('*, units(name, code, description), rubrics:units(rubrics(criteria, title))')
+    .select('*, units(name, code, description)')
     .eq('id', submissionId)
     .single();
 
   if (subError || !submission) {
     return res.status(404).json({ error: '找不到该提交记录' });
+  }
+
+  // 2. 每日限额检查（每用户每天最多 5 次）
+  const today = new Date().toISOString().split('T')[0];
+  const { count } = await supabase
+    .from('submissions')
+    .select('*', { count: 'exact', head: true })
+    .eq('user_id', submission.user_id)
+    .eq('status', 'completed')
+    .gte('created_at', `${today}T00:00:00Z`);
+
+  if (count >= 5) {
+    await supabase.from('submissions').update({ status: 'error' }).eq('id', submissionId);
+    return res.status(429).json({ error: '今日提交次数已达上限（5次/天），明天再来吧 😊' });
   }
 
   // 2. 获取该 unit 的 rubric
