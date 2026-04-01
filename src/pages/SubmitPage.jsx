@@ -54,7 +54,7 @@ const SubmitPage = () => {
     setError('');
 
     try {
-      // Create submission record in Supabase
+      // 1. 创建提交记录
       const { data, error: insertError } = await supabase
         .from('submissions')
         .insert({
@@ -68,7 +68,19 @@ const SubmitPage = () => {
 
       if (insertError) throw insertError;
 
-      // Navigate to result page (Phase 2 will add AI processing)
+      // 2. 调用 AI 评分 API
+      const gradeRes = await fetch('/api/grade', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ submissionId: data.id }),
+      });
+
+      if (!gradeRes.ok) {
+        const err = await gradeRes.json();
+        throw new Error(err.error || 'AI 评分失败');
+      }
+
+      // 3. 跳转结果页
       navigate(`/result/${data.id}`);
     } catch (err) {
       console.error('Submission failed:', err);
@@ -136,7 +148,7 @@ const SubmitPage = () => {
             {isSubmitting ? (
               <>
                 <Loader2 size={18} className="animate-spin" />
-                提交中...
+                AI 评分中，请稍候...
               </>
             ) : (
               <>
