@@ -5,7 +5,7 @@ import { useAuthStore } from '../stores/authStore';
 const DashboardPage = () => {
   const { user, profile } = useAuthStore();
 
-  const displayName = profile?.full_name || user?.email?.split('@')[0] || '用户';
+  const displayName = (profile?.full_name && profile.full_name.trim()) ? profile.full_name : (user?.email?.split('@')[0] || '用户');
 
   return (
     <main className="max-w-4xl mx-auto px-6 py-12">
@@ -53,15 +53,18 @@ const DashboardPage = () => {
             </p>
           </Link>
 
-          <div className="bg-gradient-to-br from-blue-600 to-indigo-700 p-8 rounded-[2.5rem] shadow-xl shadow-blue-200 text-white">
-            <div className="bg-white/20 p-3 rounded-xl w-fit mb-4">
+          <Link
+            to="/resources"
+            className="bg-gradient-to-br from-blue-600 to-indigo-700 p-8 rounded-[2.5rem] shadow-xl shadow-blue-200 text-white hover:shadow-2xl hover:scale-[1.02] transition-all group"
+          >
+            <div className="bg-white/20 p-3 rounded-xl w-fit mb-4 group-hover:scale-110 transition-transform">
               <FileText className="text-white" size={24} />
             </div>
             <h3 className="font-bold text-lg mb-2">资料库</h3>
             <p className="text-sm text-blue-100">
-              范文库和评分标准（即将上线）
+              Edexcel IAL 评分标准与逻辑链要求
             </p>
-          </div>
+          </Link>
         </div>
       </div>
     </main>
