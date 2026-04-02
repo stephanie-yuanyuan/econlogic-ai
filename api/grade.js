@@ -6,7 +6,10 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+const openai = new OpenAI({
+  apiKey: process.env.DEEPSEEK_API_KEY,
+  baseURL: 'https://api.deepseek.com',
+});
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Helper: build a rich, mark-scheme-driven prompt
@@ -319,7 +322,7 @@ export default async function handler(req, res) {
 
     // ── 5. Call OpenAI ────────────────────────────────────────────────────
     const completion = await openai.chat.completions.create({
-      model: 'gpt-4o-mini',
+      model: 'deepseek-chat',
       messages: [{ role: 'user', content: prompt }],
       temperature: 0.2,          // Low temperature for consistent marking
       response_format: { type: 'json_object' },
