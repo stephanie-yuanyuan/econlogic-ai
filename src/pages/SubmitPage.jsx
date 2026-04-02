@@ -55,6 +55,11 @@ const SubmitPage = () => {
     setError('');
 
     try {
+      console.log('[Step 1] 开始 insert submission...');
+      console.log('[Step 1] session:', session);
+      console.log('[Step 1] user_id:', session?.user?.id);
+      console.log('[Step 1] unit_id:', selectedUnit);
+
       const { data, error: insertError } = await supabase
         .from('submissions')
         .insert({
@@ -68,8 +73,10 @@ const SubmitPage = () => {
         .select()
         .single();
 
+      console.log('[Step 1] 完成, data:', data, 'error:', insertError);
       if (insertError) throw insertError;
 
+      console.log('[Step 2] 开始调用 /api/grade, submissionId:', data.id);
       const gradeRes = await fetch('/api/grade', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -79,6 +86,7 @@ const SubmitPage = () => {
         }),
       });
 
+      console.log('[Step 2] 完成, status:', gradeRes.status);
       if (!gradeRes.ok) {
         const err = await gradeRes.json();
         throw new Error(err.error || 'AI 评分失败');
@@ -86,6 +94,7 @@ const SubmitPage = () => {
 
       navigate(`/result/${data.id}`);
     } catch (err) {
+      console.error('[提交失败]', err);
       setError('提交失败：' + (err.message || '未知错误'));
       setIsSubmitting(false);
     }
